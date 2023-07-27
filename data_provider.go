@@ -5,6 +5,8 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 // ---------------------------------------------------------------------
@@ -43,11 +45,9 @@ func NewDataProvider(filenames ...string) (*DataProvider, error) {
 	}
 
 	// Parse its contentws
-	pdp.Sections, err = ParseData(data)
-	if err != nil {
-		return nil, err
-	}
+	pdp.Sections = ParseData(data)
 
+	// Done
 	return pdp, nil
 }
 
@@ -65,15 +65,29 @@ func DefaultFileName() string {
 
 // ParseData reads the contents of an .ini file and returns a map of its
 // section names and their lines.
-func ParseData(data []byte) (map[string][]string, error) {
+func ParseData(data []byte) map[string][]string {
 
 	// Create an empty map of section names to list of strings
 	sm := make(map[string][]string)
 
+	// Create the regular expression(s) we will use to parse the file
+	reSection := regexp.MustCompile(`\[(.*)\]`)
+
 	// Scan the lines into sections
 	scanner := bufio.NewScanner(bytes.NewReader(data))
+	var currentSection string
 	for scanner.Scan() {
-
+		line := scanner.Text()
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		m := reSection.FindStringSubmatch(line)
+		if m == nil {
+			sm[currentSection] = append(sm[currentSection], line)
+			continue
+		}
+		currentSection = m[1]
+		sm[currentSection] = make([]string, 0)
 	}
-	return sm, nil
+	return sm
 }

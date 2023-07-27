@@ -9,6 +9,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestConstructorWithBogusFilename(t *testing.T) {
+	_, err := NewDataProvider("Bogus")
+	assert.NotNil(t, err)
+}
+
+func TestConstructorWithDefault(t *testing.T) {
+	pdp, err := NewDataProvider()
+	_ = pdp
+	_ = err
+}
+
 func TestDefaultFileName(t *testing.T) {
 	userId, err := user.Current()
 	username := userId.Username

@@ -44,7 +44,7 @@ func NewDataProvider(filenames ...string) (*DataProvider, error) {
 		return nil, err
 	}
 
-	// Parse its contentws
+	// Parse its contents
 	pdp.Sections = ParseData(data)
 
 	// Done

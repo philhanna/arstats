@@ -1,7 +1,9 @@
 package aisleriot
 
 import (
+	"os"
 	"os/user"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,24 +20,15 @@ func TestDefaultFileName(t *testing.T) {
 }
 
 func TestParseData(t *testing.T) {
+	stoogeFile := filepath.Join("testdata", "stooges.ini")
+	stooges, err := os.ReadFile(stoogeFile)
+	assert.Nil(t, err)
 	tests := []struct {
 		name    string
 		data    []byte
 		want    map[string][]string
 	}{
-		{"stooges", []byte(`
-[Larry]
-rank=2
-saying=Hey, Moe!
-
-[Curly]
-rank=3
-saying=Nyuk, nyuk, nyuk
-
-[Moe]
-rank=1
-saying=Why, I oughta...
-`), map[string][]string{
+		{"stooges", stooges, map[string][]string{
 	"Moe": {
 		"rank=1",
 		"saying=Why, I oughta...",

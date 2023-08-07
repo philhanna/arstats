@@ -120,54 +120,70 @@ func DefaultFileName() string {
 func ParseData(data []byte) (map[string]map[string]string, error) {
 	var (
 		err         error
-		group       []string
-		key         string
-		line        string
 		lineNumber  int
-		scanner     *bufio.Scanner
 		sectionName string
-		sm          map[string]map[string]string
-		value       string
+		sm          = make(map[string]map[string]string)
 	)
 
-	// Create an empty map of section names to list of strings
-	sm = make(map[string]map[string]string)
-
-	// Scan the lines into sections
-	scanner = bufio.NewScanner(bytes.NewReader(data))
+	scanner := bufio.NewScanner(bytes.NewReader(data))
 
 	for scanner.Scan() {
-		line = strings.TrimSpace(scanner.Text())
+		line := strings.TrimSpace(scanner.Text())
 		if line == "" || strings.HasPrefix(line, "#") {
-			// Skip blank lines and comments
-			continue
+			continue // skip blank lines and comments
 		}
 		lineNumber++
 
-		// If this line is a section header, make it the current section
-		group = reSection.FindStringSubmatch(line)
-		if group != nil {
-			sectionName = group[1]
+		if sectionName == "" {
+			// The first non-blank line must be a section header
+			sectionName, err = parseSection(line)
+			if err != nil {
+				return nil, err
+			}
 			sm[sectionName] = make(map[string]string)
 			continue
-		} else if lineNumber == 1 {
-			// The first non-blank line must be a section header
-			err = fmt.Errorf("data found before any section header: %q", line)
-			return nil, err
 		}
 
-		// Add this line to the current section.
-		group = reItem.FindStringSubmatch(line)
-		if group == nil {
-			// The item does not consist of key=value
-			err = fmt.Errorf("invalid item: %q", line)
+		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
+			// This line is a section header
+			sectionName, err = parseSection(line)
+			if err != nil {
+				return nil, err
+			}
+			sm[sectionName] = make(map[string]string)
+			continue
+		}
+
+		key, value, err := parseItem(line)
+		if err != nil {
 			return nil, err
 		}
-		key, value = group[1], group[2]
 		sm[sectionName][key] = value
-
 	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
 	return sm, nil
+}
+
+// parseItem parses an item and returns its key and value.
+func parseItem(line string) (string, string, error) {
+	group := reItem.FindStringSubmatch(line)
+	if group == nil {
+		return "", "", fmt.Errorf("invalid item: %q", line)
+	}
+	return group[1], group[2], nil
+}
+
+// parseSection parses a section header and returns its name.
+func parseSection(line string) (string, error) {
+	group := reSection.FindStringSubmatch(line)
+	if group == nil {
+		return "", fmt.Errorf("invalid section header: %q", line)
+	}
+	return group[1], nil
 }
 
 // ToSectionName converts a game name to the corresponding section name.

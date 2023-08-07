@@ -151,3 +151,21 @@ func TestDataProvider_MostRecentGame(t *testing.T) {
 		})
 	}
 }
+
+func TestToSectionName(t *testing.T) {
+	tests := []struct {
+		name string
+		gameName string
+		expected string
+	}{
+		{"simple", "freecell", "freecell.scm"},
+		{"with hyphen", "auld-lang-syne", "auld_lang_syne.scm"},
+		{"empty", "", ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			actual := ToSectionName(tt.gameName)
+			assert.Equal(t, tt.expected, actual)
+		})
+	}
+}

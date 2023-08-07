@@ -169,3 +169,16 @@ func ParseData(data []byte) (map[string]map[string]string, error) {
 	}
 	return sm, nil
 }
+
+// ToSectionName converts a game name to the corresponding section name.
+// Hyphens are converted to underscores and ".scm" is appended.
+func ToSectionName(gameName string) string {
+	var sectionName string
+	gameName = strings.TrimSpace(gameName)
+	if gameName == "" {
+		return ""
+	}
+	sectionName = strings.ReplaceAll(gameName, "-", "_")
+	sectionName += ".scm"
+	return sectionName
+}

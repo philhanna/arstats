@@ -35,29 +35,51 @@ func TestParseData(t *testing.T) {
 	stooges, err := os.ReadFile(stoogeFile)
 	assert.Nil(t, err)
 	tests := []struct {
-		name    string
-		data    []byte
-		want    map[string][]string
+		name string
+		data []byte
+		want map[string]map[string]string
 	}{
-		{"stooges", stooges, map[string][]string{
-	"Moe": {
-		"rank=1",
-		"saying=Why, I oughta...",
-	},
-	"Larry": {
-		"rank=2",
-		"saying=Hey, Moe!",
-	},
-	"Curly": {
-		"rank=3",
-		"saying=Nyuk, nyuk, nyuk",
-	},
-}},
+		{"stooges", stooges, map[string]map[string]string{
+			"Moe": {
+				"rank":   "1",
+				"saying": "Why, I oughta...",
+			},
+			"Larry": {
+				"rank":   "2",
+				"saying": "Hey, Moe!",
+			},
+			"Curly": {
+				"rank":   "3",
+				"saying": "Nyuk, nyuk, nyuk",
+			},
+		}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			sections := ParseData(tt.data)
+			sections, err := ParseData(tt.data)
+			assert.Nil(t, err)
 			assert.Equal(t, tt.want, sections)
+		})
+	}
+}
+
+func TestDataProvider_GameList(t *testing.T) {
+	tests := []struct {
+		name     string
+		filename string
+		want     []string
+	}{
+		{"Normal file", filepath.Join("testdata", "aisleriot"), []string{"spider", "freecell", "canfield", "klondike"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pdp, err := NewDataProvider(tt.filename)
+			if err != nil {
+				t.Fatalf("could not load %s: %v", tt.filename, err)
+			}
+			have := pdp.GameList()
+			want := tt.want
+			assert.Equal(t, want, have)
 		})
 	}
 }

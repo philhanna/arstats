@@ -3,6 +3,7 @@ package aisleriot
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -16,8 +17,28 @@ import (
 // DataProvider is a structure holding a map of section names to values,
 // obtained from the .config/gnome-games/aisleriot .ini file
 type DataProvider struct {
-	Sections map[string][]string
+	Sections map[string]map[string]string
 }
+
+// ---------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------
+
+const (
+	HeaderSection = "Aisleriot Config"
+	RecentItem    = "Recent"
+)
+
+// ---------------------------------------------------------------------
+// Variables
+// ---------------------------------------------------------------------
+
+var (
+	// Create the regular expression(s) we will use to parse the file.
+	// Declared outside any function so that they can be unit tested.
+	reSection = regexp.MustCompile(`\[(.*)\]`)
+	reItem    = regexp.MustCompile(`([^=]+)=([^=]+)`)
+)
 
 // ---------------------------------------------------------------------
 // Constructor
@@ -45,10 +66,31 @@ func NewDataProvider(filenames ...string) (*DataProvider, error) {
 	}
 
 	// Parse its contents
-	pdp.Sections = ParseData(data)
+	pdp.Sections, err = ParseData(data)
+	if err != nil {
+		return nil, err
+	}
 
 	// Done
 	return pdp, nil
+}
+
+// ---------------------------------------------------------------------
+// Methods
+// ---------------------------------------------------------------------
+
+// GameList returns the list of all games played so far, based on the
+// "Recent" list in the header section.  If no games have been played,
+// returns nil
+func (pdp *DataProvider) GameList() []string {
+	item := pdp.Sections[HeaderSection][RecentItem]
+	if item == "" {
+		return nil
+	}
+	item = strings.TrimSuffix(item, ";")
+	list := strings.Split(item, ";")
+	
+	return list
 }
 
 // ---------------------------------------------------------------------
@@ -65,29 +107,55 @@ func DefaultFileName() string {
 
 // ParseData reads the contents of an .ini file and returns a map of its
 // section names and their lines.
-func ParseData(data []byte) map[string][]string {
+func ParseData(data []byte) (map[string]map[string]string, error) {
+	var (
+		err         error
+		group       []string
+		key         string
+		line        string
+		lineNumber  int
+		scanner     *bufio.Scanner
+		sectionName string
+		sm          map[string]map[string]string
+		value       string
+	)
 
 	// Create an empty map of section names to list of strings
-	sm := make(map[string][]string)
-
-	// Create the regular expression(s) we will use to parse the file
-	reSection := regexp.MustCompile(`\[(.*)\]`)
+	sm = make(map[string]map[string]string)
 
 	// Scan the lines into sections
-	scanner := bufio.NewScanner(bytes.NewReader(data))
-	var currentSection string
+	scanner = bufio.NewScanner(bytes.NewReader(data))
+
 	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.TrimSpace(line) == "" {
+		line = strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			// Skip blank lines and comments
 			continue
 		}
-		m := reSection.FindStringSubmatch(line)
-		if m == nil {
-			sm[currentSection] = append(sm[currentSection], line)
+		lineNumber++
+
+		// If this line is a section header, make it the current section
+		group = reSection.FindStringSubmatch(line)
+		if group != nil {
+			sectionName = group[1]
+			sm[sectionName] = make(map[string]string)
 			continue
+		} else if lineNumber == 1 {
+			// The first non-blank line must be a section header
+			err = fmt.Errorf("data found before any section header: %q", line)
+			return nil, err
 		}
-		currentSection = m[1]
-		sm[currentSection] = make([]string, 0)
+
+		// Add this line to the current section.
+		group = reItem.FindStringSubmatch(line)
+		if group == nil {
+			// The item does not consist of key=value
+			err = fmt.Errorf("invalid item: %q", line)
+			return nil, err
+		}
+		key, value = group[1], group[2]
+		sm[sectionName][key] = value
+
 	}
-	return sm
+	return sm, nil
 }

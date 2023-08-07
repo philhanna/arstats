@@ -100,7 +100,7 @@ func (pdp *DataProvider) MostRecentGame() string {
 	if list == nil {
 		return ""
 	}
-	return list[0]	
+	return list[0]
 }
 
 // ---------------------------------------------------------------------

@@ -146,10 +146,7 @@ func ParseData(data []byte) (map[string]map[string]string, error) {
 
 		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
 			// This line is a section header
-			sectionName, err = parseSection(line)
-			if err != nil {
-				return nil, err
-			}
+			sectionName, _ = parseSection(line)
 			sm[sectionName] = make(map[string]string)
 			continue
 		}

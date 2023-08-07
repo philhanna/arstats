@@ -17,6 +17,16 @@ func TestAccessors(t *testing.T) {
 	assert.Equal(t, 907, ps.Worst())
 	assert.Equal(t, 3, ps.WinsToNextHigher())
 	assert.Equal(t, 3, ps.LossesToNextLower())
+
+	ps = NewStatistics(0, 0, 0, 0)
+	assert.Equal(t, 0, ps.Wins())
+	assert.Equal(t, 0, ps.Losses())
+	assert.Equal(t, 0, ps.Total())
+	assert.Equal(t, 0, ps.Best())
+	assert.Equal(t, 0, ps.Average())
+	assert.Equal(t, 0, ps.Worst())
+	assert.Equal(t, -1, ps.WinsToNextHigher())
+	assert.Equal(t, -1, ps.LossesToNextLower())
 }
 
 func TestNewStatisticsFromString(t *testing.T) {

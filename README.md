@@ -1,2 +1,2 @@
 # aisleriot
-Displays statistics from Aisleriot card games on Ubuntu
+Displays statistics for Linux Aisleriot card games

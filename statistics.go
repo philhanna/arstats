@@ -53,7 +53,8 @@ func NewStatistics(wins, total, best, worst int) *Statistics {
 // Creates a new Statistics object from the string representation
 // that is in the configuration file, e.g., "99;150;144;208;"
 func NewStatisticsFromString(statString string) (*Statistics, error) {
-	tokens := strings.Split(statString, ";")[:4]
+	statString = strings.TrimSuffix(statString, ";")
+	tokens := strings.Split(statString, ";")
 	if len(tokens) != 4 {
 		return nil, fmt.Errorf("expected 4 values, got %d from %q", len(tokens), statString)
 	}

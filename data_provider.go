@@ -160,11 +160,6 @@ func ParseData(data []byte) (map[string]map[string]string, error) {
 		}
 		sm[sectionName][key] = value
 	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
 	return sm, nil
 }
 

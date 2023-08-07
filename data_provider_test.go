@@ -36,9 +36,9 @@ func TestParseData(t *testing.T) {
 	stooges, err := os.ReadFile(stoogeFile)
 	assert.Nil(t, err)
 	tests := []struct {
-		name string
-		data []byte
-		want map[string]map[string]string
+		name     string
+		data     []byte
+		expected map[string]map[string]string
 	}{
 		{"stooges", stooges, map[string]map[string]string{
 			"Moe": {
@@ -59,17 +59,17 @@ func TestParseData(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			sections, err := ParseData(tt.data)
 			assert.Nil(t, err)
-			assert.Equal(t, tt.want, sections)
+			assert.Equal(t, tt.expected, sections)
 		})
 	}
 }
 
 func TestDataProvider_GameList(t *testing.T) {
 	tests := []struct {
-		name      string
-		filename  string
-		want      []string
-		wantError bool
+		name          string
+		filename      string
+		expected      []string
+		expectedError bool
 	}{
 		{"Normal file",
 			filepath.Join("testdata", "aisleriot"),
@@ -95,11 +95,11 @@ func TestDataProvider_GameList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			pdp, err := NewDataProvider(tt.filename)
-			if tt.wantError {
+			if tt.expectedError {
 				assert.NotNil(t, err, fmt.Sprint(err))
 			} else {
 				actual := pdp.GameList()
-				expected := tt.want
+				expected := tt.expected
 				assert.Equal(t, expected, actual)
 			}
 		})
@@ -108,10 +108,10 @@ func TestDataProvider_GameList(t *testing.T) {
 
 func TestDataProvider_MostRecentGame(t *testing.T) {
 	tests := []struct {
-		name      string
-		filename  string
-		want      string
-		wantError bool
+		name          string
+		filename      string
+		expected      string
+		expectedError bool
 	}{
 		{"Normal file",
 			filepath.Join("testdata", "aisleriot"),
@@ -141,11 +141,11 @@ func TestDataProvider_MostRecentGame(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			pdp, err := NewDataProvider(tt.filename)
-			if tt.wantError {
+			if tt.expectedError {
 				assert.NotNil(t, err, fmt.Sprint(err))
 			} else {
 				actual := pdp.MostRecentGame()
-				expected := tt.want
+				expected := tt.expected
 				assert.Equal(t, expected, actual)
 			}
 		})
@@ -154,7 +154,7 @@ func TestDataProvider_MostRecentGame(t *testing.T) {
 
 func TestToSectionName(t *testing.T) {
 	tests := []struct {
-		name string
+		name     string
 		gameName string
 		expected string
 	}{

@@ -113,7 +113,7 @@ func (ps *Statistics) Percentage() int {
 	return ps.pct
 }
 
-func (ps *Statistics) WinsToNextHigherPercentage() int {
+func (ps *Statistics) WinsToNextHigher() int {
 	if ps.Wins() == 0 {
 		return -1
 	}
@@ -121,14 +121,15 @@ func (ps *Statistics) WinsToNextHigherPercentage() int {
 	wins, losses := ps.Wins(), ps.Losses()
 	for {
 		wins++
-		nextPct := int(math.Round(100 * float64(wins) / float64(wins+losses)))
+		total := wins + losses
+		nextPct := int(math.Round(100 * float64(wins) / float64(total)))
 		if nextPct > currentPct {
 			return wins - ps.Wins()
 		}
 	}
 }
 
-func (ps *Statistics) LossesToNextLowerPercentage() int {
+func (ps *Statistics) LossesToNextLower() int {
 	if ps.Wins() == 0 {
 		return -1
 	}
@@ -136,7 +137,8 @@ func (ps *Statistics) LossesToNextLowerPercentage() int {
 	wins, losses := ps.Wins(), ps.Losses()
 	for {
 		losses++
-		nextPct := int(math.Round(100 * float64(wins) / float64(wins+losses)))
+		total := wins + losses
+		nextPct := int(math.Round(100 * float64(wins) / float64(total)))
 		if nextPct < currentPct {
 			return losses - ps.Losses()
 		}

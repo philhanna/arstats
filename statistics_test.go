@@ -7,6 +7,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAccessors(t *testing.T) {
+	ps := NewStatistics(45, 241, 479, 907)
+	assert.Equal(t, 45, ps.Wins())
+	assert.Equal(t, 196, ps.Losses())
+	assert.Equal(t, 241, ps.Total())
+	assert.Equal(t, 479, ps.Best())
+	assert.Equal(t, 693, ps.Average())
+	assert.Equal(t, 907, ps.Worst())
+	assert.Equal(t, 3, ps.WinsToNextHigher())
+	assert.Equal(t, 3, ps.LossesToNextLower())
+}
+
 func TestNewStatisticsFromString(t *testing.T) {
 	tests := []struct {
 		name          string

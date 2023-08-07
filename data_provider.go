@@ -89,8 +89,18 @@ func (pdp *DataProvider) GameList() []string {
 	}
 	item = strings.TrimSuffix(item, ";")
 	list := strings.Split(item, ";")
-	
+
 	return list
+}
+
+// MostRecentGame returns the name of the game most recently played,
+// or the empty string if no games have been played.
+func (pdp *DataProvider) MostRecentGame() string {
+	list := pdp.GameList()
+	if list == nil {
+		return ""
+	}
+	return list[0]	
 }
 
 // ---------------------------------------------------------------------

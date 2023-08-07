@@ -105,3 +105,49 @@ func TestDataProvider_GameList(t *testing.T) {
 		})
 	}
 }
+
+func TestDataProvider_MostRecentGame(t *testing.T) {
+	tests := []struct {
+		name      string
+		filename  string
+		want      string
+		wantError bool
+	}{
+		{"Normal file",
+			filepath.Join("testdata", "aisleriot"),
+			"spider",
+			false},
+		{"Different .ini",
+			filepath.Join("testdata", "stooges.ini"),
+			"",
+			false},
+		{"Non-existent file",
+			filepath.Join("testdata", "non-existent.ini"),
+			"",
+			true},
+		{"Malformed file",
+			filepath.Join("testdata", "bogus.ini"),
+			"",
+			true},
+		{"Malformed file2",
+			filepath.Join("testdata", "bogus2.ini"),
+			"",
+			true},
+		{"Good file 2",
+			filepath.Join("testdata", "goodfile.ini"),
+			"block-ten",
+			false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pdp, err := NewDataProvider(tt.filename)
+			if tt.wantError {
+				assert.NotNil(t, err, fmt.Sprint(err))
+			} else {
+				actual := pdp.MostRecentGame()
+				expected := tt.want
+				assert.Equal(t, expected, actual)
+			}
+		})
+	}
+}

@@ -1,6 +1,7 @@
 package aisleriot
 
 import (
+	"fmt"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -65,22 +66,38 @@ func TestParseData(t *testing.T) {
 
 func TestDataProvider_GameList(t *testing.T) {
 	tests := []struct {
-		name     string
-		filename string
-		want     []string
+		name      string
+		filename  string
+		want      []string
+		wantError bool
 	}{
-		{"Normal file", filepath.Join("testdata", "aisleriot"), []string{"spider", "freecell", "canfield", "klondike"}},
-		{"Different .ini", filepath.Join("testdata", "stooges.ini"), nil},
+		{"Normal file",
+			filepath.Join("testdata", "aisleriot"),
+			[]string{"spider", "freecell", "canfield", "klondike"},
+			false},
+		{"Different .ini",
+			filepath.Join("testdata", "stooges.ini"),
+			nil,
+			false},
+		{"Non-existent file",
+			filepath.Join("testdata", "non-existent.ini"),
+			nil,
+			true},
+		{"Malformed file",
+			filepath.Join("testdata", "bogus.ini"),
+			nil,
+			true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			pdp, err := NewDataProvider(tt.filename)
-			if err != nil {
-				t.Fatalf("could not load %s: %v", tt.filename, err)
+			if tt.wantError {
+				assert.NotNil(t, err, fmt.Sprint(err))
+			} else {
+				actual := pdp.GameList()
+				expected := tt.want
+				assert.Equal(t, expected, actual)
 			}
-			have := pdp.GameList()
-			want := tt.want
-			assert.Equal(t, want, have)
 		})
 	}
 }

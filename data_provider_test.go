@@ -70,6 +70,7 @@ func TestDataProvider_GameList(t *testing.T) {
 		want     []string
 	}{
 		{"Normal file", filepath.Join("testdata", "aisleriot"), []string{"spider", "freecell", "canfield", "klondike"}},
+		{"Different .ini", filepath.Join("testdata", "stooges.ini"), nil},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestToSectionName(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -44,4 +43,3 @@ func TestToDisplayName(t *testing.T) {
 		})
 	}
 }
-

@@ -6,7 +6,7 @@ import "strings"
 // Functions
 // ---------------------------------------------------------------------
 
-// titleCase makes the first character of a name uppercase, and the 
+// titleCase makes the first character of a name uppercase, and the
 // remainder (if any) lower case
 func titleCase(name string) string {
 	name = strings.TrimSpace(name)
@@ -48,4 +48,3 @@ func ToSectionName(gameName string) string {
 	}
 	return sName
 }
-

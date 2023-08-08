@@ -85,34 +85,44 @@ func NewStatisticsFromString(statString string) (*Statistics, error) {
 // Methods
 // ---------------------------------------------------------------------
 
+// Wins returns the number of games won
 func (ps *Statistics) Wins() int {
 	return ps.wins
 }
 
+// Losses returns the number of games lost
 func (ps *Statistics) Losses() int {
 	return ps.total - ps.wins
 }
 
+// Total returns the total number of games played
 func (ps *Statistics) Total() int {
 	return ps.total
 }
 
+// Best returns the number of seconds in the shortest winning game
 func (ps *Statistics) Best() int {
 	return ps.best
 }
 
+// Average returns the integer average of Best() and Worst()
 func (ps *Statistics) Average() int {
 	return ps.average
 }
 
+// Worst returns the number of seconds in the longest winning game
 func (ps *Statistics) Worst() int {
 	return ps.worst
 }
 
+// Percentage returns the winning fraction multiplied by 100 and rounded
+// to nearest integer
 func (ps *Statistics) Percentage() int {
 	return ps.pct
 }
 
+// WinsToNextHigher returns the number of wins that will make the
+// winning percentage one integer higher.
 func (ps *Statistics) WinsToNextHigher() int {
 	if ps.Wins() == 0 {
 		return -1
@@ -129,6 +139,8 @@ func (ps *Statistics) WinsToNextHigher() int {
 	}
 }
 
+// LossesToNextLower returns the number of losses that will make the
+// winning percentage one integer lower.
 func (ps *Statistics) LossesToNextLower() int {
 	if ps.Wins() == 0 {
 		return -1

@@ -4,20 +4,22 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	ar "github.com/philhanna/aisleriot"
 )
 
 func main() {
 
 	var (
-		listFlag    bool
-		gameName    string
+		listFlag bool
+		gameName string
 	)
 
 	// Parse the command line. There are short and long names for each
 	// option
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `
-Usage: arstats [OPTION]...
+		fmt.Fprintf(os.Stderr,
+`Usage: arstats [OPTION]...
 
 Shows statistics for Aisleriot games played by the current user.
 
@@ -37,7 +39,6 @@ Output includes:
   - Worst time
   - Number of wins to next higher percent
   - Number of losses to next lower percent
-
   `)
 	}
 	flag.BoolVar(&listFlag, "l", false, "List all games played")
@@ -45,4 +46,8 @@ Output includes:
 	flag.StringVar(&gameName, "g", "", "Game name")
 	flag.StringVar(&gameName, "game", "", "Game name")
 	flag.Parse()
+}
+
+func getDataProvider() (*ar.DataProvider, error) {
+	return nil, nil
 }

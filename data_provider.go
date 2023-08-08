@@ -177,22 +177,3 @@ func parseSection(line string) (string, error) {
 	}
 	return group[1], nil
 }
-
-// ToDisplayName converts a game name as found in the [AisleRiot Config]
-// Recent=name1;name2;name3 item into a name suitable for display.
-func ToDisplayName(gameName string) string {
-	return "-1"
-}
-
-// ToSectionName converts a game name to the corresponding section name.
-// Hyphens are converted to underscores and ".scm" is appended.
-func ToSectionName(gameName string) string {
-	var sectionName string
-	gameName = strings.TrimSpace(gameName)
-	if gameName == "" {
-		return ""
-	}
-	sectionName = strings.ReplaceAll(gameName, "-", "_")
-	sectionName += ".scm"
-	return sectionName
-}

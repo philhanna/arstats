@@ -9,7 +9,6 @@ import (
 func main() {
 
 	var (
-		currentFlag bool
 		listFlag    bool
 		gameName    string
 	)
@@ -23,9 +22,9 @@ Usage: arstats [OPTION]...
 Shows statistics for Aisleriot games played by the current user.
 
 Options:
-  -c, --current         Show statistics for the most recently played game (default)
-  -l, --list            List the names of all games played
   -g, --game=GAMENAME	Name of game for which statistics are desired
+                        (Default is most recently played game)
+  -l, --list            List the names of all games played
 
 Statistics include:
   - Number of wins
@@ -40,8 +39,6 @@ Statistics include:
 
   `)
 	}
-	flag.BoolVar(&currentFlag, "c", true, "Use current game")
-	flag.BoolVar(&currentFlag, "current", true, "Use current game")
 	flag.BoolVar(&listFlag, "l", false, "List all games played")
 	flag.BoolVar(&listFlag, "list", false, "List all games played")
 	flag.StringVar(&gameName, "g", "", "Game name")

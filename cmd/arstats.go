@@ -26,7 +26,8 @@ Options:
                         (Default is most recently played game)
   -l, --list            List the names of all games played
 
-Statistics include:
+Output includes:
+  - Game name
   - Number of wins
   - Number of losses
   - Total games played

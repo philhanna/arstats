@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	ar "github.com/philhanna/aisleriot"
@@ -19,7 +20,7 @@ func main() {
 	// option
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr,
-`Usage: arstats [OPTION]...
+			`Usage: arstats [OPTION]...
 
 Shows statistics for Aisleriot games played by the current user.
 
@@ -46,8 +47,23 @@ Output includes:
 	flag.StringVar(&gameName, "g", "", "Game name")
 	flag.StringVar(&gameName, "game", "", "Game name")
 	flag.Parse()
-}
 
-func getDataProvider() (*ar.DataProvider, error) {
-	return nil, nil
+	// Get the data provider
+	pdp, err := ar.NewDataProvider()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Handle the --list option
+	if listFlag {
+		gameNames := pdp.GameList()
+		if gameNames == nil {
+			fmt.Printf("No games have been played\n")
+		} else {
+			for i, gameName := range pdp.GameList() {
+				fmt.Printf("%d: %s\n", i, gameName)
+			}
+			return
+		}
+	}
 }

@@ -35,6 +35,7 @@ func TestToDisplayName(t *testing.T) {
 		{"with suffix", "freecell.scm", "Freecell"},
 		{"with hyphen", "auld-lang-syne", "Auld Lang Syne"},
 		{"empty", "", ""},
+		{"single letters", "a-short-name.scm", "A Short Name"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

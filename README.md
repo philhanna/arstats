@@ -1,4 +1,7 @@
 # aisleriot
+[![Go Report Card](https://goreportcard.com/badge/github.com/philhanna/aisleriot)][idGoReportCard]
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/philhanna/aisleriot)][idPkgGoDev]
+
 Displays statistics for Linux Aisleriot card games
 
 ## Usage
@@ -31,3 +34,6 @@ git clone git@github.com:philhanna/aisleriot.git
 cd aisleriot
 go install cmd/arstats.go
 ```
+
+[idGoReportCard]: https://goreportcard.com/report/github.com/philhanna/aisleriot
+[idPkgGoDev]: https://pkg.go.dev/github.com/philhanna/aisleriot

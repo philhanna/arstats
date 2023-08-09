@@ -27,6 +27,7 @@ type DataProvider struct {
 const (
 	HeaderSection = "Aisleriot Config"
 	RecentItem    = "Recent"
+	StatsKey      = "Statistic"
 )
 
 // ---------------------------------------------------------------------

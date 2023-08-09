@@ -3,6 +3,8 @@ Displays statistics for Linux Aisleriot card games
 
 ## Usage
 ```
+Usage: arstats [OPTION]...
+
 Shows statistics for Aisleriot games played by the current user.
 
 Options:
@@ -21,4 +23,11 @@ Output includes:
   - Winning percentage
   - Number of wins to next higher percent
   - Number of losses to next lower percent
+```
+## Installation
+```bash
+cd /tmp
+git clone git@github.com:philhanna/aisleriot.git
+cd aisleriot
+go install cmd/arstats.go
 ```

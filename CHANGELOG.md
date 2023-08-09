@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog].
 	
 ## [Unreleased]
 
-- Added doc.go to both aisleriot package and CLI package
+- Added doc.go to both aisleriot package and command line package.
 
 ## [v1.0.0] - 2023-08-09
 First version

@@ -61,9 +61,9 @@ Output includes:
 			fmt.Printf("No games have been played\n")
 		} else {
 			for i, gameName := range pdp.GameList() {
-				fmt.Printf("%d: %s\n", i, gameName)
+				fmt.Printf("%d: %s\n", i+1, ar.ToDisplayName(gameName))
 			}
-			return
 		}
+		return
 	}
 }

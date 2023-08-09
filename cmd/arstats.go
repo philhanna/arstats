@@ -35,10 +35,10 @@ Output includes:
   - Number of wins
   - Number of losses
   - Total games played
-  - Winning percentage
   - Best time
   - Average time
   - Worst time
+  - Winning percentage
   - Number of wins to next higher percent
   - Number of losses to next lower percent
   `)
@@ -106,10 +106,10 @@ func printStatistics(pdp *ar.DataProvider, gameName string) {
 	parts = append(parts, "Number of wins:")
 	parts = append(parts, "Number of losses:")
 	parts = append(parts, "Total games played:")
-	parts = append(parts, "Winning percentage:")
 	parts = append(parts, "Best time:")
 	parts = append(parts, "Average time:")
 	parts = append(parts, "Worst time:")
+	parts = append(parts, "Winning percentage:")
 	parts = append(parts, fmt.Sprintf("Number of wins to %d%%:", ps.Percentage()+1))
 	parts = append(parts, fmt.Sprintf("Number of losses to %d%%:", ps.Percentage()-1))
 
@@ -121,10 +121,10 @@ func printStatistics(pdp *ar.DataProvider, gameName string) {
 	parts[1] += fmt.Sprintf(" %d", ps.Wins())
 	parts[2] += fmt.Sprintf(" %d", ps.Losses())
 	parts[3] += fmt.Sprintf(" %d", ps.Total())
-	parts[4] += fmt.Sprintf(" %d%%", ps.Percentage())
-	parts[5] += fmt.Sprintf(" %s", secondsToTime(ps.Best()))
-	parts[6] += fmt.Sprintf(" %s", secondsToTime(ps.Average()))
-	parts[7] += fmt.Sprintf(" %s", secondsToTime(ps.Worst()))
+	parts[4] += fmt.Sprintf(" %s", secondsToTime(ps.Best()))
+	parts[5] += fmt.Sprintf(" %s", secondsToTime(ps.Average()))
+	parts[6] += fmt.Sprintf(" %s", secondsToTime(ps.Worst()))
+	parts[7] += fmt.Sprintf(" %d%%", ps.Percentage())
 	parts[8] += fmt.Sprintf(" %d", ps.WinsToNextHigher())
 	parts[9] += fmt.Sprintf(" %d", ps.LossesToNextLower())
 

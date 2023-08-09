@@ -15,6 +15,7 @@ func TestToSectionName(t *testing.T) {
 		{"simple", "freecell", "freecell.scm"},
 		{"with hyphen", "auld-lang-syne", "auld_lang_syne.scm"},
 		{"empty", "", ""},
+		{"ucname", "Spider", "spider.scm"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

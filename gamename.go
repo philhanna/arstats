@@ -43,6 +43,7 @@ func ToDisplayName(gameName string) string {
 func ToSectionName(gameName string) string {
 	sName := strings.TrimSpace(gameName)
 	if sName != "" {
+		sName = strings.ToLower(sName)
 		sName = strings.ReplaceAll(sName, "-", "_")
 		sName += ".scm"
 	}

@@ -43,3 +43,24 @@ func TestToDisplayName(t *testing.T) {
 		})
 	}
 }
+
+func Test_titleCase(t *testing.T) {
+	tests := []struct {
+		testName string
+		name     string
+		expected string
+	}{
+		{"Empty string", "", ""},
+		{"Several spaces", "   ", ""},
+		{"Single letter", "a", "A"},
+		{"Two letters", "OK", "Ok"},
+		{"Two letters plus space", "OK ", "Ok"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.testName, func(t *testing.T) {
+			expected := tt.expected
+			actual := titleCase(tt.name)
+			assert.Equal(t, expected, actual)
+		})
+	}
+}

@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog].
 ## [Unreleased]
 
 - Added doc.go to both aisleriot package and command line package.
+- Reran gofmt -w -s
 
 ## [v1.0.0] - 2023-08-09
 First version

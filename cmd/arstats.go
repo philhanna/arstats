@@ -127,6 +127,12 @@ func printStatistics(pdp *ar.DataProvider, gameName string) {
 	parts[7] += fmt.Sprintf(" %d%%", ps.Percentage())
 	parts[8] += fmt.Sprintf(" %d", ps.WinsToNextHigher())
 	parts[9] += fmt.Sprintf(" %d", ps.LossesToNextLower())
+	if strings.HasSuffix(parts[9], "-1") {
+		parts = parts[:9]
+	}
+	if strings.HasSuffix(parts[8], "-1") {
+		parts = parts[:8]
+	}
 
 	// Join parts with newlines and print
 	stats := strings.Join(parts, "\n")

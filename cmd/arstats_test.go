@@ -9,9 +9,9 @@ import (
 func Test_padParts(t *testing.T) {
 
 	tests := []struct {
-		name string
+		name  string
 		parts []string
-		want []string
+		want  []string
 	}{
 		{"Simple", []string{"Larry", "Curly", "Moe"}, []string{"Larry", "Curly", "Moe"}},
 	}

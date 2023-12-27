@@ -127,6 +127,9 @@ func (ps *Statistics) WinsToNextHigher() int {
 	if ps.Wins() == 0 {
 		return -1
 	}
+	if ps.Losses() == 0 {
+		return -1
+	}
 	currentPct := ps.Percentage()
 	wins, losses := ps.Wins(), ps.Losses()
 	for {
@@ -143,6 +146,9 @@ func (ps *Statistics) WinsToNextHigher() int {
 // winning percentage one integer lower.
 func (ps *Statistics) LossesToNextLower() int {
 	if ps.Wins() == 0 {
+		return -1
+	}
+	if ps.Losses() == 0 {
 		return -1
 	}
 	currentPct := ps.Percentage()

@@ -64,3 +64,25 @@ func TestNewStatisticsFromString(t *testing.T) {
 		})
 	}
 }
+
+func TestStatistics_WinsToNextHigher(t *testing.T) {
+
+	tests := []struct {
+		name       string
+		statString string
+		want       int
+	}{
+		{"0 win 0 loss", "0;0;0;0;", -1},
+		{"1 win 0 loss", "1;1;0;0;", -1},
+		{"1 win 2 loss", "1;2;0;0;", 1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ps, err := NewStatisticsFromString(tt.statString)
+			assert.Nil(t, err)
+			want := tt.want
+			have := ps.WinsToNextHigher()
+			assert.Equal(t, want, have)
+		})
+	}
+}

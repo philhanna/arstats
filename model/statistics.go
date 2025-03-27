@@ -1,4 +1,4 @@
-package aisleriot
+package model
 
 import (
 	"fmt"

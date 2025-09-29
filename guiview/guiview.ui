@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>MainWindow</class>
+
+    <!-- The main window for the application -->
+    <widget class="QMainWindow" name="MainWindow">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>717</width>
+                <height>500</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>MainWindow</string>
+        </property>
+        <widget class="QWidget" name="centralwidget">
+
+            <!-- The list that will contain statistics -->
+            <widget class="QListWidget" name="listWidget">
+                <property name="geometry">
+                    <rect>
+                        <x>60</x>
+                        <y>70</y>
+                        <width>591</width>
+                        <height>361</height>
+                    </rect>
+                </property>
+            </widget>
+
+            <!-- The Close button at the bottom -->
+            <widget class="QPushButton" name="pushButton">
+                <property name="geometry">
+                    <rect>
+                        <x>300</x>
+                        <y>450</y>
+                        <width>94</width>
+                        <height>26</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Close</string>
+                </property>
+            </widget>
+
+            <!-- The label at the top -->
+            <widget class="QLabel" name="label">
+                <property name="geometry">
+                    <rect>
+                        <x>50</x>
+                        <y>20</y>
+                        <width>601</width>
+                        <height>41</height>
+                    </rect>
+                </property>
+                <property name="font">
+                    <font>
+                        <pointsize>14</pointsize>
+                    </font>
+                </property>
+                <property name="text">
+                    <string>AisleRiot Statistics</string>
+                </property>
+                <property name="alignment">
+                    <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+            </widget>
+
+        </widget>
+    </widget>
+    <resources />
+    <connections />
+</ui>

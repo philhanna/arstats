@@ -1,4 +1,4 @@
-package model
+package domain
 
 import (
 	"fmt"
@@ -66,7 +66,6 @@ func TestNewStatisticsFromString(t *testing.T) {
 }
 
 func TestStatistics_WinsToNextHigher(t *testing.T) {
-
 	tests := []struct {
 		name       string
 		statString string

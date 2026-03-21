@@ -6,8 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/philhanna/aisleriot/model"
-	"github.com/philhanna/aisleriot/view"
+	"github.com/philhanna/aisleriot/internal/adapters/cli"
+	"github.com/philhanna/aisleriot/internal/adapters/inifile"
+	"github.com/philhanna/aisleriot/internal/application"
 )
 
 func main() {
@@ -17,8 +18,6 @@ func main() {
 		gameNameArg string
 	)
 
-	// Parse the command line. There are short and long names for each
-	// option
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr,
 			`Usage: arstats [OPTION]...
@@ -49,31 +48,33 @@ Output includes:
 	flag.StringVar(&gameNameArg, "game", "", "Game name")
 	flag.Parse()
 
-	// Get the data provider
-	pdp, err := model.NewDataProvider()
+	// Wire the secondary adapter to the port and build the service.
+	repo, err := inifile.NewIniRepository()
 	if err != nil {
 		log.Fatal(err)
 	}
+	svc := application.NewGameService(repo)
 
-	// Handle the --list option
+	// Handle the --list option.
 	if listFlag {
-		view.List(pdp)
+		cli.List(svc.ListGames())
 		return
 	}
 
-	// Handle the --game option
-	gameName := ""
-	if gameNameArg == "" {
-		gameName = pdp.MostRecentGame()
-	} else {
-		gameName = gameNameArg
+	// Resolve the game name.
+	gameName := gameNameArg
+	if gameName == "" {
+		gameName = svc.MostRecentGame()
 	}
 	if gameName == "" {
-		view.ErrorMessage("No games have been played\n")
+		cli.ErrorMessage("No games have been played")
 		return
 	}
-	gameName = model.ToDisplayName(gameName)
 
-	// Print the statistics
-	view.PrintStatistics(pdp, gameName)
+	// Fetch and present statistics.
+	stats, err := svc.GetStatistics(gameName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	cli.PrintStatistics(gameName, stats)
 }

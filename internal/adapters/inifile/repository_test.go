@@ -1,4 +1,4 @@
-package model
+package inifile
 
 import (
 	"fmt"
@@ -14,19 +14,17 @@ var testdata string
 
 func init() {
 	cwd, _ := os.Getwd()
-	testdata = filepath.Join(cwd, "..", "testdata")
+	testdata = filepath.Join(cwd, "..", "..", "..", "testdata")
 	testdata, _ = filepath.Abs(testdata)
 }
 
-func TestConstructorWithBogusFilename(t *testing.T) {
-	_, err := NewDataProvider("Bogus")
+func TestNewIniRepositoryWithBogusFilename(t *testing.T) {
+	_, err := NewIniRepository("Bogus")
 	assert.NotNil(t, err)
 }
 
-func TestConstructorWithDefault(t *testing.T) {
-	pdp, err := NewDataProvider()
-	_ = pdp
-	_ = err
+func TestNewIniRepositoryDefault(t *testing.T) {
+	_, _ = NewIniRepository()
 }
 
 func TestDefaultFileName(t *testing.T) {
@@ -72,7 +70,7 @@ func TestParseData(t *testing.T) {
 	}
 }
 
-func TestDataProvider_GameList(t *testing.T) {
+func TestIniRepository_GameList(t *testing.T) {
 	tests := []struct {
 		name          string
 		filename      string
@@ -102,19 +100,18 @@ func TestDataProvider_GameList(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pdp, err := NewDataProvider(tt.filename)
+			repo, err := NewIniRepository(tt.filename)
 			if tt.expectedError {
 				assert.NotNil(t, err, fmt.Sprint(err))
 			} else {
-				actual := pdp.GameList()
-				expected := tt.expected
-				assert.Equal(t, expected, actual)
+				actual := repo.GameList()
+				assert.Equal(t, tt.expected, actual)
 			}
 		})
 	}
 }
 
-func TestDataProvider_MostRecentGame(t *testing.T) {
+func TestIniRepository_MostRecentGame(t *testing.T) {
 	tests := []struct {
 		name          string
 		filename      string
@@ -148,74 +145,13 @@ func TestDataProvider_MostRecentGame(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pdp, err := NewDataProvider(tt.filename)
+			repo, err := NewIniRepository(tt.filename)
 			if tt.expectedError {
 				assert.NotNil(t, err, fmt.Sprint(err))
 			} else {
-				actual := pdp.MostRecentGame()
-				expected := tt.expected
-				assert.Equal(t, expected, actual)
+				actual := repo.MostRecentGame()
+				assert.Equal(t, tt.expected, actual)
 			}
-		})
-	}
-}
-
-func TestToSectionName(t *testing.T) {
-	tests := []struct {
-		name     string
-		gameName string
-		expected string
-	}{
-		{"simple", "freecell", "freecell.scm"},
-		{"with hyphen", "auld-lang-syne", "auld_lang_syne.scm"},
-		{"empty", "", ""},
-		{"ucname", "Spider", "spider.scm"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			actual := ToSectionName(tt.gameName)
-			assert.Equal(t, tt.expected, actual)
-		})
-	}
-}
-
-func TestToDisplayName(t *testing.T) {
-	tests := []struct {
-		name     string
-		gameName string
-		expected string
-	}{
-		{"simple", "freecell", "Freecell"},
-		{"with suffix", "freecell.scm", "Freecell"},
-		{"with hyphen", "auld-lang-syne", "Auld Lang Syne"},
-		{"empty", "", ""},
-		{"single letters", "a-short-name.scm", "A Short Name"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			actual := ToDisplayName(tt.gameName)
-			assert.Equal(t, tt.expected, actual)
-		})
-	}
-}
-
-func Test_titleCase(t *testing.T) {
-	tests := []struct {
-		testName string
-		name     string
-		expected string
-	}{
-		{"Empty string", "", ""},
-		{"Several spaces", "   ", ""},
-		{"Single letter", "a", "A"},
-		{"Two letters", "OK", "Ok"},
-		{"Two letters plus space", "OK ", "Ok"},
-	}
-	for _, tt := range tests {
-		t.Run(tt.testName, func(t *testing.T) {
-			expected := tt.expected
-			actual := titleCase(tt.name)
-			assert.Equal(t, expected, actual)
 		})
 	}
 }

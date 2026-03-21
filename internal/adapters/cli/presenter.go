@@ -1,44 +1,30 @@
-package view
+package cli
 
 import (
 	"fmt"
-	"github.com/philhanna/aisleriot/model"
-	"log"
 	"strings"
+
+	"github.com/philhanna/aisleriot/internal/domain"
 )
 
+// ErrorMessage prints an error message to stdout.
 func ErrorMessage(msg string) {
 	fmt.Println(msg)
 }
 
-func List(pdp *model.DataProvider) {
-	gameNames := pdp.GameList()
-	if gameNames != nil {
-		for i, gameName := range pdp.GameList() {
-			fmt.Printf("%d: %s\n", i+1, model.ToDisplayName(gameName))
-		}
-	} else {
-		fmt.Printf("No games have been played\n")
+// List prints a numbered list of game display names.
+func List(displayNames []string) {
+	if len(displayNames) == 0 {
+		fmt.Println("No games have been played")
+		return
 	}
-
+	for i, name := range displayNames {
+		fmt.Printf("%d: %s\n", i+1, name)
+	}
 }
 
-// Prints the statistics for the specified game
-func PrintStatistics(pdp *model.DataProvider, gameName string) {
-	sName := model.ToSectionName(gameName)
-	section, ok := pdp.Sections[sName]
-	if !ok {
-		log.Fatalf("Game %q not found\n", gameName)
-	}
-
-	// Get the statistics for this game
-	statString := section[model.StatsKey]
-	ps, err := model.NewStatisticsFromString(statString)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Start forming the list of statistical strings
+// PrintStatistics prints the formatted statistics table for a game.
+func PrintStatistics(displayName string, ps *domain.Statistics) {
 	parts := make([]string, 0)
 	parts = append(parts, "Game name:")
 	parts = append(parts, "Number of wins:")
@@ -51,11 +37,9 @@ func PrintStatistics(pdp *model.DataProvider, gameName string) {
 	parts = append(parts, fmt.Sprintf("Number of wins to %d%%:", ps.Percentage()+1))
 	parts = append(parts, fmt.Sprintf("Number of losses to %d%%:", ps.Percentage()-1))
 
-	// Pad them all to the length of the longest part
 	parts = PadParts(parts)
 
-	// Append the statistic to each line
-	parts[0] += fmt.Sprintf(" %s", gameName)
+	parts[0] += fmt.Sprintf(" %s", displayName)
 	parts[1] += fmt.Sprintf(" %d", ps.Wins())
 	parts[2] += fmt.Sprintf(" %d", ps.Losses())
 	parts[3] += fmt.Sprintf(" %d", ps.Total())
@@ -72,12 +56,10 @@ func PrintStatistics(pdp *model.DataProvider, gameName string) {
 		parts = parts[:8]
 	}
 
-	// Join parts with newlines and print
-	stats := strings.Join(parts, "\n")
-	fmt.Println(stats)
+	fmt.Println(strings.Join(parts, "\n"))
 }
 
-// PadParts pads all the strings to the length of the longest part
+// PadParts pads all strings to the length of the longest one.
 func PadParts(parts []string) []string {
 	maxLen := -1
 	for _, s := range parts {
@@ -95,12 +77,10 @@ func PadParts(parts []string) []string {
 	return newParts
 }
 
-// SecondsToTime converts a number of seconds into a mm:ss string
+// SecondsToTime converts seconds to a "mm:ss" string, or "N/A" if zero.
 func SecondsToTime(seconds int) string {
 	if seconds == 0 {
 		return "N/A"
 	}
-	mm := int(seconds / 60)
-	ss := seconds % 60
-	return fmt.Sprintf("%02d:%02d", mm, ss)
+	return fmt.Sprintf("%02d:%02d", seconds/60, seconds%60)
 }

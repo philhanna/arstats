@@ -1,4 +1,4 @@
-package model
+package domain
 
 import (
 	"fmt"
@@ -7,11 +7,7 @@ import (
 	"strings"
 )
 
-// ---------------------------------------------------------------------
-// Type Definitions
-// ---------------------------------------------------------------------
-
-// Captures the wins, losses, and percentages
+// Statistics captures the wins, losses, and percentages for a game.
 type Statistics struct {
 	wins    int // Number of wins
 	losses  int // Number of losses
@@ -22,20 +18,9 @@ type Statistics struct {
 	pct     int // Multiplied by 100 and rounded to nearest integer
 }
 
-// ---------------------------------------------------------------------
-// Constructors
-// ---------------------------------------------------------------------
-// Creates a new Statistics object from the basic integer values
-// that AisleRiot keeps:
-//   - wins
-//   - total
-//   - best
-//   - worst
-//
-// It then calculates the other three values:
-//   - losses
-//   - average
-//   - percentage of wins
+// NewStatistics creates a new Statistics object from the basic integer values
+// that AisleRiot keeps: wins, total, best, worst.
+// It calculates losses, average, and winning percentage.
 func NewStatistics(wins, total, best, worst int) *Statistics {
 	stats := new(Statistics)
 	stats.wins = wins
@@ -50,8 +35,8 @@ func NewStatistics(wins, total, best, worst int) *Statistics {
 	return stats
 }
 
-// Creates a new Statistics object from the string representation
-// that is in the configuration file, e.g., "99;150;144;208;"
+// NewStatisticsFromString creates a new Statistics object from the string
+// representation in the configuration file, e.g., "99;150;144;208;"
 func NewStatisticsFromString(statString string) (*Statistics, error) {
 	statString = strings.TrimSuffix(statString, ";")
 	tokens := strings.Split(statString, ";")
@@ -81,45 +66,27 @@ func NewStatisticsFromString(statString string) (*Statistics, error) {
 	return NewStatistics(wins, total, best, worst), nil
 }
 
-// ---------------------------------------------------------------------
-// Methods
-// ---------------------------------------------------------------------
+// Wins returns the number of games won.
+func (ps *Statistics) Wins() int { return ps.wins }
 
-// Wins returns the number of games won
-func (ps *Statistics) Wins() int {
-	return ps.wins
-}
+// Losses returns the number of games lost.
+func (ps *Statistics) Losses() int { return ps.total - ps.wins }
 
-// Losses returns the number of games lost
-func (ps *Statistics) Losses() int {
-	return ps.total - ps.wins
-}
+// Total returns the total number of games played.
+func (ps *Statistics) Total() int { return ps.total }
 
-// Total returns the total number of games played
-func (ps *Statistics) Total() int {
-	return ps.total
-}
+// Best returns the number of seconds in the shortest winning game.
+func (ps *Statistics) Best() int { return ps.best }
 
-// Best returns the number of seconds in the shortest winning game
-func (ps *Statistics) Best() int {
-	return ps.best
-}
+// Average returns the integer average of Best() and Worst().
+func (ps *Statistics) Average() int { return ps.average }
 
-// Average returns the integer average of Best() and Worst()
-func (ps *Statistics) Average() int {
-	return ps.average
-}
-
-// Worst returns the number of seconds in the longest winning game
-func (ps *Statistics) Worst() int {
-	return ps.worst
-}
+// Worst returns the number of seconds in the longest winning game.
+func (ps *Statistics) Worst() int { return ps.worst }
 
 // Percentage returns the winning fraction multiplied by 100 and rounded
-// to nearest integer
-func (ps *Statistics) Percentage() int {
-	return ps.pct
-}
+// to nearest integer.
+func (ps *Statistics) Percentage() int { return ps.pct }
 
 // WinsToNextHigher returns the number of wins that will make the
 // winning percentage one integer higher.
